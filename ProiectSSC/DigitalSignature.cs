@@ -1,6 +1,11 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
+
+using System;
+//using System.Security.Cryptography;
+//using System.Text;
+
 public class DigitalSignature
 {
     private RSA _rsa;
@@ -10,20 +15,30 @@ public class DigitalSignature
         _rsa = RSA.Create();
     }
 
-    public string GetPublicKey()
+    public void SavePublicKey(string filePath)
     {
-        return Convert.ToBase64String(_rsa.ExportRSAPublicKey());
+        string publicKey = Convert.ToBase64String(_rsa.ExportRSAPublicKey());
+        FileUtils.WriteFile(filePath, publicKey);
     }
 
-    public byte[] SignData(string message)
+    public byte[] SignFile(string filePath)
     {
-        byte[] dataBytes = Encoding.UTF8.GetBytes(message);
+        string content = FileUtils.ReadFile(filePath);
+        byte[] dataBytes = Encoding.UTF8.GetBytes(content);
         return _rsa.SignData(dataBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
     }
 
-    public bool VerifySignature(string message, byte[] signature)
+    public bool VerifyFileSignature(string filePath, byte[] signature, string publicKeyPath)
     {
-        byte[] dataBytes = Encoding.UTF8.GetBytes(message);
-        return _rsa.VerifyData(dataBytes, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+        string content = FileUtils.ReadFile(filePath);
+        byte[] dataBytes = Encoding.UTF8.GetBytes(content);
+        byte[] publicKeyBytes = Convert.FromBase64String(FileUtils.ReadFile(publicKeyPath));
+
+        using (RSA rsaVerify = RSA.Create())
+        {
+            rsaVerify.ImportRSAPublicKey(publicKeyBytes, out _);
+            return rsaVerify.VerifyData(dataBytes, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+        }
     }
 }
+

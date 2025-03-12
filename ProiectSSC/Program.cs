@@ -2,26 +2,35 @@
 
 using System.Security.Cryptography;
 using System.Text;
+
+
 class Program
 {
     static void Main()
     {
-        string mesaj = "Acesta este un mesaj important.";
+        string filePath = "document.txt";
+        string signaturePath = "signature.txt";
+        string publicKeyPath = "public_key.txt";
 
-        // Test SHA-256
-        string hash = HashingUtils.ComputeSHA256(mesaj);
-        Console.WriteLine($"SHA-256: {hash}");
+        // Creăm documentul
+        string mesaj = "Acesta este un document important.";
+        FileUtils.WriteFile(filePath, mesaj);
+        Console.WriteLine($"✅ Documentul a fost creat: {filePath}");
 
-        // Test HMAC-SHA256
-        string cheieSecreta = "cheie123";
-        string hmac = HashingUtils.ComputeHMACSHA256(mesaj, cheieSecreta);
-        Console.WriteLine($"HMAC-SHA256: {hmac}");
-
-        // Test Semnătură Digitală
+        // 🔹 Generăm și salvăm cheia publică
         DigitalSignature ds = new DigitalSignature();
-        byte[] semnatura = ds.SignData(mesaj);
-        bool valid = ds.VerifySignature(mesaj, semnatura);
-        Console.WriteLine($"Semnătura este validă: {valid}");
+        ds.SavePublicKey(publicKeyPath);
+        Console.WriteLine($"✅ Cheia publică a fost salvată: {publicKeyPath}");
+
+        // 🔹 Semnăm documentul
+        byte[] signature = ds.SignFile(filePath);
+        FileUtils.WriteBytesToFile(signaturePath, signature);
+        Console.WriteLine($"✅ Semnătura a fost salvată: {signaturePath}");
+
+        // 🔹 Verificăm semnătura
+        bool isValid = ds.VerifyFileSignature(filePath, FileUtils.ReadBytesFromFile(signaturePath), publicKeyPath);
+        Console.WriteLine($"🔎 Semnătura este validă: {isValid}");
     }
 }
+
 
