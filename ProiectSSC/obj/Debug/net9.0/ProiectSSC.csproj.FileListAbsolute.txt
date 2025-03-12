@@ -1,0 +1,15 @@
+C:\Users\Larisa\Documents\FACULTATE\SSC\Proiect\ProiectSSC\ProiectSSC\bin\Debug\net9.0\ProiectSSC.exe
+C:\Users\Larisa\Documents\FACULTATE\SSC\Proiect\ProiectSSC\ProiectSSC\bin\Debug\net9.0\ProiectSSC.deps.json
+C:\Users\Larisa\Documents\FACULTATE\SSC\Proiect\ProiectSSC\ProiectSSC\bin\Debug\net9.0\ProiectSSC.runtimeconfig.json
+C:\Users\Larisa\Documents\FACULTATE\SSC\Proiect\ProiectSSC\ProiectSSC\bin\Debug\net9.0\ProiectSSC.dll
+C:\Users\Larisa\Documents\FACULTATE\SSC\Proiect\ProiectSSC\ProiectSSC\bin\Debug\net9.0\ProiectSSC.pdb
+C:\Users\Larisa\Documents\FACULTATE\SSC\Proiect\ProiectSSC\ProiectSSC\obj\Debug\net9.0\ProiectSSC.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Larisa\Documents\FACULTATE\SSC\Proiect\ProiectSSC\ProiectSSC\obj\Debug\net9.0\ProiectSSC.AssemblyInfoInputs.cache
+C:\Users\Larisa\Documents\FACULTATE\SSC\Proiect\ProiectSSC\ProiectSSC\obj\Debug\net9.0\ProiectSSC.AssemblyInfo.cs
+C:\Users\Larisa\Documents\FACULTATE\SSC\Proiect\ProiectSSC\ProiectSSC\obj\Debug\net9.0\ProiectSSC.csproj.CoreCompileInputs.cache
+C:\Users\Larisa\Documents\FACULTATE\SSC\Proiect\ProiectSSC\ProiectSSC\obj\Debug\net9.0\ProiectSSC.sourcelink.json
+C:\Users\Larisa\Documents\FACULTATE\SSC\Proiect\ProiectSSC\ProiectSSC\obj\Debug\net9.0\ProiectSSC.dll
+C:\Users\Larisa\Documents\FACULTATE\SSC\Proiect\ProiectSSC\ProiectSSC\obj\Debug\net9.0\refint\ProiectSSC.dll
+C:\Users\Larisa\Documents\FACULTATE\SSC\Proiect\ProiectSSC\ProiectSSC\obj\Debug\net9.0\ProiectSSC.pdb
+C:\Users\Larisa\Documents\FACULTATE\SSC\Proiect\ProiectSSC\ProiectSSC\obj\Debug\net9.0\ProiectSSC.genruntimeconfig.cache
+C:\Users\Larisa\Documents\FACULTATE\SSC\Proiect\ProiectSSC\ProiectSSC\obj\Debug\net9.0\ref\ProiectSSC.dll
