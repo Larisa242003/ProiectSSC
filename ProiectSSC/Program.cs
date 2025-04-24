@@ -5,66 +5,51 @@ using System.Text;
 
 class Program
 {
-    static void Main()
+    // Calculează hash SHA-256 pentru un fișier
+    public static string ComputeFileHash(string path)
     {
-        string filePath = "document.txt";
-        string signaturePath = "signature.txt";
-        string publicKeyPath = "public_key.txt";
-
-        // Creăm documentul doar dacă nu există deja
-        string mesaj = "Acesta este un document important.";
-
-        // Verificăm dacă fișierul există deja și dacă da, calculăm hash-ul său
-        string fileHash = ComputeFileHash(filePath);
-        Console.WriteLine($"Hash-ul fișierului inițial: {fileHash}");
-
-        // Creăm documentul doar dacă nu există deja
-        if (!File.Exists(filePath))
-        {
-            FileUtils.WriteFile(filePath, mesaj);
-            Console.WriteLine($"✅ Documentul a fost creat: {filePath}");
-        }
-
-        // 🔹 Generăm și salvăm cheia publică
-        DigitalSignature ds = new DigitalSignature();
-        ds.SavePublicKey(publicKeyPath);
-        Console.WriteLine($"✅ Cheia publică a fost salvată: {publicKeyPath}");
-
-        // 🔹 Semnăm documentul
-        byte[] signature = ds.SignFile(filePath);
-        FileUtils.WriteBytesToFile(signaturePath, signature);
-        Console.WriteLine($"✅ Semnătura a fost salvată: {signaturePath}");
-
-        // 🔹 Verificăm semnătura
-        bool isValid = ds.VerifyFileSignature(filePath, FileUtils.ReadBytesFromFile(signaturePath), publicKeyPath);
-        Console.WriteLine($"🔎 Semnătura este validă: {isValid}");
-
-        // 🔹 Simulăm modificarea fișierului
-        FileUtils.WriteFile(filePath, "Acesta este un document modificat.");
-        Console.WriteLine("⚠️ Fișierul a fost modificat.");
-
-        // 🔹 Verificăm dacă fișierul a fost modificat
-        string newFileHash = ComputeFileHash(filePath);
-        Console.WriteLine($"Hash-ul fișierului după modificare: {newFileHash}");
-
-        if (fileHash != newFileHash)
-        {
-            Console.WriteLine("⚠️ Fișierul a fost modificat după semnătura inițială.");
-        }
-        else
-        {
-            Console.WriteLine("✅ Fișierul nu a fost modificat.");
-        }
+        using var sha256 = SHA256.Create();
+        using var stream = File.OpenRead(path);
+        byte[] hash = sha256.ComputeHash(stream);
+        return Convert.ToHexString(hash); // .NET 6+
     }
 
-    static string ComputeFileHash(string filePath)
+    static void Main()
+{
+    Console.WriteLine("Alege opțiunea:");
+    Console.WriteLine("1 - Generează hash și salvează");
+    Console.WriteLine("2 - Verifică integritatea fișierului");
+    Console.Write("Opțiune: ");
+    var opt = Console.ReadLine();
+
+    string path = "mesaj.txt";
+
+    if (opt == "1")
     {
-        // Calculează hash-ul fișierului
-        using (SHA256 sha256 = SHA256.Create())
-        {
-            byte[] fileBytes = File.ReadAllBytes(filePath);
-            byte[] hashBytes = sha256.ComputeHash(fileBytes);
-            return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
-        }
+        string hash = ComputeFileHash(path);
+        File.WriteAllText("hash_original.txt", hash);
+        Console.WriteLine("Hash-ul original a fost salvat.");
+    }
+    else if (opt == "2")
+    {
+        string receivedHash = File.ReadAllText("hash_original.txt");
+        string currentHash = ComputeFileHash(path);
+
+        Console.WriteLine("Hash actual:   " + currentHash);
+        Console.WriteLine("Hash salvat:   " + receivedHash);
+
+        if (currentHash == receivedHash)
+            Console.WriteLine("\n✅ Fișierul NU a fost modificat.");
+        else
+            Console.WriteLine("\n❌ Fișierul A FOST modificat!");
+    }
+    else
+    {
+        Console.WriteLine("Opțiune invalidă.");
     }
 }
+
+}
+
+
+
