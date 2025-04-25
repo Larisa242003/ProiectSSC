@@ -22,61 +22,85 @@ class Program
         return Convert.ToHexString(hash);
     }
 
-    static void Main()
+    static void ShowMenu()
     {
-        Console.WriteLine("Alege opțiunea:");
+        Console.WriteLine("\n==================== MENIU ====================");
         Console.WriteLine("1 - Generează hash SHA-256 și salvează");
         Console.WriteLine("2 - Verifică integritatea cu SHA-256");
         Console.WriteLine("3 - Generează HMAC și salvează");
         Console.WriteLine("4 - Verifică integritatea cu HMAC");
+        Console.WriteLine("0 - Ieșire");
+        Console.WriteLine("===============================================");
         Console.Write("Opțiune: ");
-        string opt = Console.ReadLine()!;
+    }
 
-
+    static void Main()
+    {
         string path = "mesaj.txt";
+        string opt;
 
-        if (opt == "1")
+        do
         {
-            string hash = ComputeFileHash(path);
-            File.WriteAllText("hash_original.txt", hash);
-            Console.WriteLine("🔐 Hash SHA-256 a fost salvat.");
-        }
-        else if (opt == "2")
-        {
-            string saved = File.ReadAllText("hash_original.txt");
-            string current = ComputeFileHash(path);
-            Console.WriteLine("Hash actual:   " + current);
-            Console.WriteLine("Hash salvat:   " + saved);
-            Console.WriteLine(current == saved
-                ? "\n✅ Fișierul NU a fost modificat."
-                : "\n❌ Fișierul A FOST modificat!");
-        }
-        else if (opt == "3")
-        {
-            Console.Write("Introduceți cheia secretă: ");
-            string key = Console.ReadLine()!;
-            string hmac = ComputeHMAC(path, key);
-            File.WriteAllText("hmac_original.txt", hmac);
-            Console.WriteLine("🔐 HMAC a fost generat și salvat.");
-        }
-        else if (opt == "4")
-        {
-            Console.Write("Introduceți cheia secretă: ");
-            string key = Console.ReadLine()!;
-            string saved = File.ReadAllText("hmac_original.txt");
-            string current = ComputeHMAC(path, key);
-            Console.WriteLine("HMAC actual:   " + current);
-            Console.WriteLine("HMAC salvat:   " + saved);
-            Console.WriteLine(current == saved
-                ? "\n✅ Fișierul este autentic și NU a fost modificat."
-                : "\n❌ Fișierul A FOST modificat sau cheia e greșită!");
-        }
-        else
-        {
-            Console.WriteLine("Opțiune invalidă.");
-        }
+            ShowMenu();
+            opt = Console.ReadLine()!;
+            Console.WriteLine(); // spațiu între meniu și rezultat
+
+            switch (opt)
+            {
+                case "1":
+                    string hash = ComputeFileHash(path);
+                    File.WriteAllText("hash_original.txt", hash);
+                    Console.WriteLine("🔐 Hash SHA-256 a fost generat și salvat.");
+                    break;
+
+                case "2":
+                    string savedHash = File.ReadAllText("hash_original.txt");
+                    string currentHash = ComputeFileHash(path);
+                    Console.WriteLine("Hash actual:   " + currentHash);
+                    Console.WriteLine("Hash salvat:   " + savedHash);
+                    Console.WriteLine(currentHash == savedHash
+                        ? "\n✅ Fișierul NU a fost modificat."
+                        : "\n❌ Fișierul A FOST modificat!");
+                    break;
+
+                case "3":
+                    Console.Write("Introduceți cheia secretă: ");
+                    string keyHmac = Console.ReadLine()!;
+                    string hmac = ComputeHMAC(path, keyHmac);
+                    File.WriteAllText("hmac_original.txt", hmac);
+                    Console.WriteLine("🔐 HMAC a fost generat și salvat.");
+                    break;
+
+                case "4":
+                    Console.Write("Introduceți cheia secretă: ");
+                    string keyVerify = Console.ReadLine()!;
+                    string savedHmac = File.ReadAllText("hmac_original.txt");
+                    string currentHmac = ComputeHMAC(path, keyVerify);
+                    Console.WriteLine("HMAC actual:   " + currentHmac);
+                    Console.WriteLine("HMAC salvat:   " + savedHmac);
+                    Console.WriteLine(currentHmac == savedHmac
+                        ? "\n✅ Fișierul este autentic și NU a fost modificat."
+                        : "\n❌ Fișierul A FOST modificat sau cheia e greșită!");
+                    break;
+
+                case "0":
+                    Console.WriteLine("👋 La revedere!");
+                    break;
+
+                default:
+                    Console.WriteLine("⚠️ Opțiune invalidă. Încearcă din nou.");
+                    break;
+            }
+
+            if (opt != "0")
+            {
+                Console.WriteLine("\nApasă Enter pentru a continua...");
+                Console.ReadLine();
+                Console.Clear();
+            }
+
+        } while (opt != "0");
     }
 }
-
 
 
