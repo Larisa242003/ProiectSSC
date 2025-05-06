@@ -34,6 +34,39 @@ class Program
         Console.Write("Opțiune: ");
     }
 
+    static string ReadSecretInput()
+{
+    StringBuilder input = new StringBuilder();
+    ConsoleKeyInfo key;
+
+    while (true)
+    {
+        key = Console.ReadKey(intercept: true);
+
+        if (key.Key == ConsoleKey.Enter)
+        {
+            Console.WriteLine();
+            break;
+        }
+        else if (key.Key == ConsoleKey.Backspace)
+        {
+            if (input.Length > 0)
+            {
+                input.Length--;
+                Console.Write("\b \b");
+            }
+        }
+        else
+        {
+            input.Append(key.KeyChar);
+            Console.Write("*");
+        }
+    }
+
+    return input.ToString();
+}
+
+
     static void Main()
     {
         string path = "mesaj.txt";
@@ -65,7 +98,7 @@ class Program
 
                 case "3":
                     Console.Write("Introduceți cheia secretă: ");
-                    string keyHmac = Console.ReadLine()!;
+                    string keyHmac = ReadSecretInput();
                     string hmac = ComputeHMAC(path, keyHmac);
                     File.WriteAllText("hmac_original.txt", hmac);
                     Console.WriteLine("🔐 HMAC a fost generat și salvat.");
@@ -73,7 +106,7 @@ class Program
 
                 case "4":
                     Console.Write("Introduceți cheia secretă: ");
-                    string keyVerify = Console.ReadLine()!;
+                    string keyVerify = ReadSecretInput();
                     string savedHmac = File.ReadAllText("hmac_original.txt");
                     string currentHmac = ComputeHMAC(path, keyVerify);
                     Console.WriteLine("HMAC actual:   " + currentHmac);
