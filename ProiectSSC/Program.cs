@@ -58,10 +58,14 @@ class Program
         Console.WriteLine("2 - Verifică integritatea cu hash");
         Console.WriteLine("3 - Generează HMAC și salvează");
         Console.WriteLine("4 - Verifică integritatea cu HMAC");
+        Console.WriteLine("5 - Generează SHA-256 manual (pe text)");
+        Console.WriteLine("6 - Generează HMAC-SHA256 manual (pe text)");
+        Console.WriteLine("7 - Verifică integritatea mesajului text cu SHA-256 manual");
+        Console.WriteLine("8 - Verifică integritatea și autenticitatea textului cu HMAC-SHA256 manual");
         Console.WriteLine("0 - Ieșire");
         Console.WriteLine("===============================================");
         Console.Write("Opțiune: ");
-    }
+    }       
 
     // Citește un input secret de la utilizator (nu afișează caracterele tastate)
     static string ReadSecretInput()
@@ -165,6 +169,73 @@ class Program
                             ? "\n✅ Fișierul este autentic și NU a fost modificat."
                             : "\n❌ Fișierul A FOST modificat sau cheia e greșită!");
                         break;
+
+                    case "5":
+                        Console.Write("Introdu mesajul text: ");
+                        string mesaj = Console.ReadLine()!;
+                        string hashManual = SHA256Manual.ComputeHash(mesaj);
+                        Console.WriteLine("🔐 SHA-256 manual:\n" + hashManual);
+                        File.WriteAllText("hash_manual.txt", hashManual);
+                        Console.WriteLine("✅ Hash manual a fost salvat în 'hash_manual.txt'.");
+                        break;
+
+                    
+                    case "6":
+                        Console.Write("Introdu mesajul text: ");
+                        string mesajHmac = Console.ReadLine()!;
+                        Console.Write("Introduceți cheia secretă: ");
+                        string cheiaHmacManual = ReadSecretInput();
+                        string hmacManual = HMACSHA256Manual.ComputeHMAC(cheiaHmacManual, mesajHmac);
+                        Console.WriteLine("🔐 HMAC-SHA256 manual:\n" + hmacManual);
+                        File.WriteAllText("hmac_manual.txt", hmacManual);
+                        Console.WriteLine("✅ HMAC manual a fost salvat în 'hmac_manual.txt'.");
+
+                    break;
+
+                    case "7":
+                        Console.Write("Introdu mesajul text: ");
+                        string mesajVerificare = Console.ReadLine()!;
+                        string hashManualNou = SHA256Manual.ComputeHash(mesajVerificare);
+
+                        if (!File.Exists("hash_manual.txt"))
+                        {
+                            File.WriteAllText("hash_manual.txt", hashManualNou);
+                            Console.WriteLine("🔐 Hash manual salvat.");
+                        }
+                        else
+                        {
+                            string hashSalvat = File.ReadAllText("hash_manual.txt");
+                            Console.WriteLine("Hash actual:   " + hashManualNou);
+                            Console.WriteLine("Hash salvat:   " + hashSalvat);
+                            Console.WriteLine(hashManualNou == hashSalvat
+                                ? "\n✅ Textul NU a fost modificat."
+                                : "\n❌ Textul A FOST modificat!");
+                        }
+                        break;
+
+                    case "8":
+                        Console.Write("Introdu mesajul text: ");
+                        string mesajHmacVerificare = Console.ReadLine()!;
+                        Console.Write("Introduceți cheia secretă: ");
+                        string cheiaHmacVerificare = ReadSecretInput();
+                        string hmacManualNou = HMACSHA256Manual.ComputeHMAC(cheiaHmacVerificare, mesajHmacVerificare);
+
+                        if (!File.Exists("hmac_manual.txt"))
+                        {
+                            File.WriteAllText("hmac_manual.txt", hmacManualNou);
+                            Console.WriteLine("🔐 HMAC manual salvat.");
+                        }
+                        else
+                        {
+                            string hmacManualSalvat = File.ReadAllText("hmac_manual.txt");
+                            Console.WriteLine("HMAC actual:   " + hmacManualNou);
+                            Console.WriteLine("HMAC salvat:   " + hmacManualSalvat);
+                            Console.WriteLine(hmacManualNou == hmacManualSalvat
+                                ? "\n✅ Textul este autentic și NU a fost modificat."
+                                : "\n❌ Textul A FOST modificat sau cheia e greșită!");
+                        }
+                        break;
+
 
                     case "0":
                         // Ieșire din program
